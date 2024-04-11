@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".UserView">
+
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search for items"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_circle"
+        android:layout_centerInParent="true"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="630dp"
+        android:layout_below="@+id/search_bar"
+        android:layout_marginTop="8dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cartButton"
+        android:layout_width="105dp"
+        android:layout_height="76dp"
+        android:layout_below="@id/recyclerView"
+        android:layout_marginTop="-121dp"
+
+        android:src="@drawable/ic_baseline_shopping_cart_24">
+
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+</RelativeLayout>
