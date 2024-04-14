@@ -290,11 +290,13 @@ public class PurchaseScreen extends AppCompatActivity implements View.OnClickLis
     }
 
     private void savePurchase() {
+        DatabaseReference userPurchasesRef = FirebaseDatabase.getInstance().getReference("user_purchases").child(userId);
         for (Upload upload : uploads) {
-            String uploadId = databaseReference3.push().getKey();
-            databaseReference3.child(uploadId).setValue(upload);
+            String uploadId = userPurchasesRef.push().getKey();
+            userPurchasesRef.child(uploadId).setValue(upload);
         }
     }
+
     private void removeFromCheckout() {
         databaseReference2.removeValue();
 

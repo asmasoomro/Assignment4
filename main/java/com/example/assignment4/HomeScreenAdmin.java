@@ -51,6 +51,8 @@ public class HomeScreenAdmin extends AppCompatActivity implements View.OnClickLi
 
         Button lgOut = (Button) findViewById(R.id.logout);
         lgOut.setOnClickListener(this);
+        Button showUserInfoButton = findViewById(R.id.showUserInfo);
+        showUserInfoButton.setOnClickListener(this);
 
     }
 
@@ -65,8 +67,53 @@ public class HomeScreenAdmin extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(this, ItemActivity.class));
         } else if (view.getId() == R.id.createAdmin) {
             startActivity(new Intent(this, AdminSignup.class));
+        } else if (view.getId() == R.id.showUserInfo) {
+            showUserInfo();
         }
     }
 
+    private void showUserInfo() {
+        // Get a reference to the Firebase Realtime Database
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+
+        // Query the database to get all users
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Iterate through each user
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    if (userId != null) {
+                        // Retrieve and display the user's information
+                        String userName = userSnapshot.child("name").getValue(String.class);
+                        String userEmail = userSnapshot.child("email").getValue(String.class);
+
+                        // Display the user details
+                        String userInfo = "User ID: " + userId + "\nName: " + userName + "\nEmail: " + userEmail + "\n\n";
+                        Toast.makeText(HomeScreenAdmin.this, userInfo, Toast.LENGTH_LONG).show();
+
+                        // Retrieve and display the user's purchase history
+                        DataSnapshot purchasesSnapshot = userSnapshot.child("user_purchases");
+                        if (purchasesSnapshot.exists()) {
+                            StringBuilder purchaseInfo = new StringBuilder("Purchase History:\n");
+                            for (DataSnapshot purchase : purchasesSnapshot.getChildren()) {
+                                String purchaseDetails = purchase.child("itemName").getValue(String.class);
+                                purchaseInfo.append("- ").append(purchaseDetails).append("\n");
+                            }
+                            Toast.makeText(HomeScreenAdmin.this, purchaseInfo.toString(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(HomeScreenAdmin.this, "No purchase history found", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors or interruptions in database retrieval
+                Toast.makeText(HomeScreenAdmin.this, "Failed to retrieve user information", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+}
 

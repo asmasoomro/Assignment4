@@ -49,44 +49,32 @@ public class PurchasesView extends AppCompatActivity implements PurchasesAdapter
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressBar=findViewById(R.id.progress_circle);
+        progressBar = findViewById(R.id.progress_circle);
         uploads = new ArrayList<>();
         adapter = new PurchasesAdapter(PurchasesView.this, uploads);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(PurchasesView.this);
-        firebaseStorage=FirebaseStorage.getInstance();
-        databaseReference= FirebaseDatabase.getInstance().getReference("purchases").child(userId);
-
+        firebaseStorage = FirebaseStorage.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("user_purchases").child(userId);
 
         dbListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange( DataSnapshot snapshot) {
-
+            public void onDataChange(DataSnapshot snapshot) {
                 uploads.clear();
-
-                for(DataSnapshot postSnapshot : snapshot.getChildren()){
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Upload upload = postSnapshot.getValue(Upload.class);
                     upload.setKey(postSnapshot.getKey());
                     uploads.add(upload);
                 }
                 adapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.INVISIBLE);
-
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                Toast.makeText(PurchasesView.this,"Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PurchasesView.this, "Error", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        databaseReference.removeEventListener(dbListener);
     }
 }

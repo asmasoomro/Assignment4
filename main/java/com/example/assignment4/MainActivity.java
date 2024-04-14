@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         admin=(Button) findViewById(R.id.adminSignIn);
         admin.setOnClickListener(this);
 
+        admin=(Button) findViewById(R.id.adminSignUp);
+        admin.setOnClickListener(this);
+
+
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -59,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view.getId() == R.id.button1) {
             startActivity(new Intent(this, SignUp.class));
+        }else if (view.getId() == R.id.adminSignUp){
+            startActivity(new Intent(this, AdminSignup.class));
         } else if (view.getId() == R.id.Login) {
             userLogin();
         } else if (view.getId() == R.id.adminSignIn) {
@@ -136,67 +142,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String userEmail = email.getText().toString().trim();
         String userPassword = password.getText().toString().trim();
 
-        if(userEmail.isEmpty()){
+        if (userEmail.isEmpty()) {
             email.setError("Please enter your email");
             email.requestFocus();
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
             email.setError("Please enter a valid email");
             email.requestFocus();
             return;
         }
 
-        if(userPassword.isEmpty()){
+        if (userPassword.isEmpty()) {
             password.setError("Please enter a password");
             password.requestFocus();
             return;
         }
 
-        if(userPassword.length()<6){
+        if (userPassword.length() < 6) {
             password.setError("Password must be longer than 6 characters");
             password.requestFocus();
             return;
         }
-        mAuth.signInWithEmailAndPassword(userEmail,userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+        mAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    FirebaseUser login =FirebaseAuth.getInstance().getCurrentUser();
+                if (task.isSuccessful()) {
+                    FirebaseUser login = FirebaseAuth.getInstance().getCurrentUser();
 
-                    reference1  = FirebaseDatabase.getInstance().getReference("admin");
-                    userId=login.getUid();
-
+                    reference1 = FirebaseDatabase.getInstance().getReference("admin");
+                    userId = login.getUid();
 
                     reference1.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Admin adminAcc = snapshot.getValue(Admin.class);
                             if (adminAcc != null) {
-
                                 boolean admin = adminAcc.getAdmin();
-                                if (admin = true) {
-                                        startActivity(new Intent(MainActivity.this, HomeScreenAdmin.class));
-
+                                if (admin) {
+                                    startActivity(new Intent(MainActivity.this, HomeScreenAdmin.class));
+                                } else {
+                                    Toast.makeText(MainActivity.this, "You do not have admin privileges", Toast.LENGTH_LONG).show();
                                 }
-
-                            } else{
-                                Toast.makeText(MainActivity.this,"You do not have an admin account", Toast.LENGTH_LONG).show();
-                                return;
+                            } else {
+                                Toast.makeText(MainActivity.this, "Admin account not found", Toast.LENGTH_LONG).show();
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(MainActivity.this,"Failed", Toast.LENGTH_LONG).show();
-
+                            Toast.makeText(MainActivity.this, "Failed to retrieve admin account", Toast.LENGTH_LONG).show();
                         }
                     });
-
-
-                }else{
-                    Toast.makeText(MainActivity.this,"Failed to login", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
                 }
             }
         });
