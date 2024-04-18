@@ -119,7 +119,7 @@ public class ItemActivity extends AppCompatActivity implements ImageAdapter.OnIt
                 String clothingPrice = Price.getText().toString();
 
 
-                databaseReference.child(selectedKey).child("name").setValue(clothingName);
+                databaseReference.child(selectedKey).child("Name").setValue(clothingName);
                 databaseReference.child(selectedKey).child("category").setValue(clothingCategory);
                 databaseReference.child(selectedKey).child("manufacturer").setValue(clothingManufacturer);
                 databaseReference.child(selectedKey).child("stock").setValue(clothingStock);
