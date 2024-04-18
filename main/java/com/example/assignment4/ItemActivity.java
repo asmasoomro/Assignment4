@@ -100,11 +100,11 @@ public class ItemActivity extends AppCompatActivity implements ImageAdapter.OnIt
         View dialogView = inflater.inflate(R.layout.item_dialog, null);
 
 
-        EditText pName = dialogView.findViewById(R.id.Name);
-        EditText pCategory = dialogView.findViewById(R.id.category);
-        EditText pStock = dialogView.findViewById(R.id.stock);
-        EditText pManufacturer = dialogView.findViewById(R.id.manufacturer);
-        EditText pPrice = dialogView.findViewById(R.id.price);
+        EditText Name = dialogView.findViewById(R.id.Name);
+        EditText Category = dialogView.findViewById(R.id.category);
+        EditText Stock = dialogView.findViewById(R.id.stock);
+        EditText Manufacturer = dialogView.findViewById(R.id.manufacturer);
+        EditText Price = dialogView.findViewById(R.id.price);
 
         AlertDialog.Builder itmDialog = new AlertDialog.Builder(this);
         itmDialog.setTitle("Update Item");
@@ -112,18 +112,18 @@ public class ItemActivity extends AppCompatActivity implements ImageAdapter.OnIt
         itmDialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String phoneName = pName.getText().toString();
-                String phoneManufacturer = pManufacturer.getText().toString();
-                String phoneStock = pStock.getText().toString();
-                String phoneCategory =pCategory.getText().toString();
-                String phonePrice = pPrice.getText().toString();
+                String clothingName = Name.getText().toString();
+                String clothingManufacturer = Manufacturer.getText().toString();
+                String clothingStock = Stock.getText().toString();
+                String clothingCategory =Category.getText().toString();
+                String clothingPrice = Price.getText().toString();
 
 
-                databaseReference.child(selectedKey).child("name").setValue(phoneName);
-                databaseReference.child(selectedKey).child("category").setValue(phoneCategory);
-                databaseReference.child(selectedKey).child("manufacturer").setValue(phoneManufacturer);
-                databaseReference.child(selectedKey).child("stock").setValue(phoneStock);
-                databaseReference.child(selectedKey).child("price").setValue(phonePrice);
+                databaseReference.child(selectedKey).child("name").setValue(clothingName);
+                databaseReference.child(selectedKey).child("category").setValue(clothingCategory);
+                databaseReference.child(selectedKey).child("manufacturer").setValue(clothingManufacturer);
+                databaseReference.child(selectedKey).child("stock").setValue(clothingStock);
+                databaseReference.child(selectedKey).child("price").setValue(clothingPrice);
                 adapter.notifyDataSetChanged();
             }
         });
